@@ -10,10 +10,16 @@ namespace DesafioFundamentos.Models
         private decimal precoPorHora = 0;
         private List<Veiculo> veiculos = new List<Veiculo>();
 
+        public List<Veiculo> Veiculos 
+        {
+            get { return veiculos; }
+        }
+
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
         {
             this.precoInicial = precoInicial;
             this.precoPorHora = precoPorHora;
+            this.veiculos = ArmazenamentoVeiculos.CarregarVeiculos();
         }
 
         public void AdicionarVeiculo()
@@ -43,6 +49,8 @@ namespace DesafioFundamentos.Models
                     placa = placa.ToUpper();
                     veiculos.Add(new Veiculo(placa));
                     Console.WriteLine("Veículo cadastrado com sucesso!");
+
+                    ArmazenamentoVeiculos.SalvarVeiculos(veiculos);
                 }
             } while (!PlacaValida(placa) || string.IsNullOrWhiteSpace(placa));
         }

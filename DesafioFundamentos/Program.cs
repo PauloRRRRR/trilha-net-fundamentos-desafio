@@ -15,6 +15,7 @@ namespace DesafioFundamentos
             Console.WriteLine("Agora digite o preço por hora:");
             decimal precoPorHora = Convert.ToDecimal(Console.ReadLine());
 
+
             Estacionamento estacionamento = new Estacionamento(precoInicial, precoPorHora);
 
             string opcao;
