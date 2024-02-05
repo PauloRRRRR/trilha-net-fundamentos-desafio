@@ -10,13 +10,18 @@ namespace DesafioFundamentos.Models
         private decimal precoPorHora = 0;
         private List<Veiculo> veiculos = new List<Veiculo>();
 
-        public List<Veiculo> Veiculos 
+        public List<Veiculo> Veiculos
         {
             get { return veiculos; }
         }
 
         public Estacionamento(decimal precoInicial, decimal precoPorHora)
         {
+            if (precoInicial < 0 || precoPorHora < 0)
+            {
+                throw new ArgumentException("Os preços não podem ser negativos.");
+            }
+
             this.precoInicial = precoInicial;
             this.precoPorHora = precoPorHora;
             this.veiculos = ArmazenamentoVeiculos.CarregarVeiculos();
@@ -24,13 +29,23 @@ namespace DesafioFundamentos.Models
 
         public void AdicionarVeiculo()
         {
-            string placa;
+            Console.WriteLine("Digite a placa do veículo para estacionar (ou 'SAIR' para cancelar):");
+            string placa = Console.ReadLine().ToUpper();
+
+            if (placa == "SAIR")
+            {
+                Console.WriteLine("Adição de veículo cancelada.");
+                return;
+            }
+
+            if (VeiculoExisteNoArquivo(placa))
+            {
+                Console.WriteLine("Veículo já está estacionado. Adição cancelada.");
+                return;
+            }
 
             do
             {
-                Console.WriteLine("Digite a placa do veículo para estacionar:");
-                placa = Console.ReadLine();
-
                 // Transforma todas as letras em maiúsculas
                 placa = placa.ToUpper();
 
@@ -50,19 +65,16 @@ namespace DesafioFundamentos.Models
                     veiculos.Add(new Veiculo(placa));
                     Console.WriteLine("Veículo cadastrado com sucesso!");
 
+                    // Atualizar o arquivo após a adição do veículo
                     ArmazenamentoVeiculos.SalvarVeiculos(veiculos);
                 }
             } while (!PlacaValida(placa) || string.IsNullOrWhiteSpace(placa));
         }
 
-
         public void RemoverVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para remover:");
-            string placa = Console.ReadLine();
-
-            // Transforma todas as letras em maiúsculas
-            placa = placa.ToUpper();
+            string placa = Console.ReadLine().ToUpper();
 
             Veiculo veiculoRemover = veiculos.FirstOrDefault(v => v.Placa.ToUpper() == placa.ToUpper());
 
@@ -72,21 +84,37 @@ namespace DesafioFundamentos.Models
 
                 int horas = 0;
 
-                while (!int.TryParse(Console.ReadLine(), out horas) || horas < 0)
+                while (true)
                 {
-                    Console.WriteLine("Número inválido, tente novamente");
+                    Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
+
+                    if (int.TryParse(Console.ReadLine(), out int horasAux) && horas >= 0)
+                    {
+                        decimal valorTotalHoras = CalcularValorTotal(horasAux);
+                        veiculos.Remove(veiculoRemover);
+                        Console.WriteLine($"Veículo com placa {placa} removido com sucesso.");
+                        Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotalHoras}");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Número inválido, tente novamente.");
+                    }
                 }
 
-                decimal valorTotal = CalcularValorTotal(horas);
-
-                veiculos.Remove(veiculoRemover);
-                Console.WriteLine($"Veículo com placa {placa} removido com sucesso.");
-                Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
+                // Atualizar o arquivo após a remoção do veículo
+                ArmazenamentoVeiculos.SalvarVeiculos(veiculos);
             }
             else
             {
                 Console.WriteLine("Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
             }
+        }
+
+        private bool VeiculoExisteNoArquivo(string placa)
+        {
+            List<Veiculo> veiculosNoArquivo = ArmazenamentoVeiculos.CarregarVeiculos();
+            return veiculosNoArquivo.Any(v => v.Placa == placa);
         }
 
         private decimal CalcularValorTotal(int horas)
