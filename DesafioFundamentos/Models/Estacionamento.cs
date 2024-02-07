@@ -80,7 +80,6 @@ namespace DesafioFundamentos.Models
 
             if (veiculoRemover != null)
             {
-                Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
 
                 int horas = 0;
 
@@ -122,20 +121,26 @@ namespace DesafioFundamentos.Models
             return precoInicial + precoPorHora * horas;
         }
 
-        public void ListarVeiculos()
+        public string ListarVeiculos()
         {
             if (veiculos.Any())
             {
-                Console.WriteLine("Os veículos estacionados são:");
+                string listaVeiculos = "Os veículos estacionados são:\n";
                 foreach (Veiculo veiculo in veiculos)
                 {
-                    Console.WriteLine($"Placa: {veiculo.Placa}");
+                    listaVeiculos += $"Placa: {veiculo.Placa}\n";
                 }
+                return listaVeiculos;
             }
             else
             {
-                Console.WriteLine("Não há veículos estacionados.");
+                return "Não há veículos estacionados.\n";
             }
+        }
+
+        public void ImprimirListaVeiculosConsole()
+        {
+            Console.WriteLine(ListarVeiculos());
         }
 
         // Método para verificar o formato da placa

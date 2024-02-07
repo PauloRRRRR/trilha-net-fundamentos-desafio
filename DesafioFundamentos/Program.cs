@@ -29,7 +29,6 @@ namespace DesafioFundamentos
                 {
                     case "1":
                         estacionamento.AdicionarVeiculo();
-                        Console.WriteLine("Veículo cadastrado com sucesso!");
                         break;
 
                     case "2":
@@ -37,7 +36,7 @@ namespace DesafioFundamentos
                         break;
 
                     case "3":
-                        estacionamento.ListarVeiculos();
+                        estacionamento.ImprimirListaVeiculosConsole();
                         break;
 
                     case "4":
@@ -45,7 +44,6 @@ namespace DesafioFundamentos
                         break;
 
                     default:
-                        Console.WriteLine("Opção inválida");
                         break;
                 }
 

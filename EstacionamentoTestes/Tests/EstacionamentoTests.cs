@@ -31,13 +31,16 @@ public class EstacionamentoTests
     [TestMethod]
     public void ListarVeiculos_ComVeiculos_MostraVeiculos()
     {
+        // Arrange
+        string esperado = "Os veículos estacionados são:\nPlaca: ABC123\nPlaca: XYZ987\n";
+
         // Act
-        estacionamento.ListarVeiculos();
+        string resultado = estacionamento.ListarVeiculos();
 
         // Assert
-        StringAssert.Contains("Veículos estacionados:", Console.Out.ToString());
-        StringAssert.Contains("Placa:", Console.Out.ToString());
+        Assert.AreEqual(esperado, resultado);
     }
+
 
     // Outros métodos de teste...
 
