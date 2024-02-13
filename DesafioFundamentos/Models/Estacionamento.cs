@@ -29,25 +29,22 @@ namespace DesafioFundamentos.Models
 
         public void AdicionarVeiculo()
         {
-            Console.WriteLine("Digite a placa do veículo para estacionar (ou 'SAIR' para cancelar):");
-            string placa = Console.ReadLine().ToUpper();
-
-            if (placa == "SAIR")
-            {
-                Console.WriteLine("Adição de veículo cancelada.");
-                return;
-            }
-
-            if (VeiculoExisteNoArquivo(placa))
-            {
-                Console.WriteLine("Veículo já está estacionado. Adição cancelada.");
-                return;
-            }
-
             do
             {
-                // Transforma todas as letras em maiúsculas
-                placa = placa.ToUpper();
+                Console.WriteLine("Digite a placa do veículo para estacionar (ou 'SAIR' para cancelar):");
+                string placa = Console.ReadLine().ToUpper();
+
+                if (placa == "SAIR")
+                {
+                    Console.WriteLine("Adição de veículo cancelada.");
+                    return;
+                }
+
+                if (VeiculoExisteNoArquivo(placa))
+                {
+                    Console.WriteLine("Veículo já está estacionado. Adição cancelada.");
+                    return;
+                }
 
                 // Verifica se a placa está no formato correto
                 if (!PlacaValida(placa))
@@ -60,16 +57,16 @@ namespace DesafioFundamentos.Models
                 }
                 else
                 {
-                    // Transforma todas as letras em maiúsculas
-                    placa = placa.ToUpper();
                     veiculos.Add(new Veiculo(placa));
                     Console.WriteLine("Veículo cadastrado com sucesso!");
 
                     // Atualizar o arquivo após a adição do veículo
                     ArmazenamentoVeiculos.SalvarVeiculos(veiculos);
+                    break; // Sair do loop após adicionar com sucesso
                 }
-            } while (!PlacaValida(placa) || string.IsNullOrWhiteSpace(placa));
+            } while (true); // Loop infinito até que uma placa válida seja fornecida
         }
+
 
         public void RemoverVeiculo()
         {
